@@ -2,15 +2,16 @@
 <html>
 <head>
   <title>Frontend</title>
-  <script src="config.js"></script>
 </head>
 <body>
   <h1>Frontend Server</h1>
   <div id="result">Carregando...</div>
   <script>
-    fetch(window.APP_CONFIG.backendUrl)
-      .then(response => {
-        document.getElementById('result').innerHTML = 'Status HTTP: ' + response.status;
+    const url = 'https://teste-backend-1030450677948.us-central1.run.app';
+    fetch(url, { cache: "no-store" })
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('result').innerHTML = data;
       })
       .catch(error => {
         document.getElementById('result').innerHTML = 'Erro ao carregar: ' + error;
