@@ -1,21 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Frontend</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend-Backend Connection Test</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        #status { padding: 20px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+    </style>
 </head>
 <body>
-  <h1>Frontend Server</h1>
-  <div id="result">Carregando...</div>
-  <script>
-    const url = 'https://teste-backend-1030450677948.us-central1.run.app';
-    fetch(url, { cache: "no-store" })
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('result').innerHTML = data;
-      })
-      .catch(error => {
-        document.getElementById('result').innerHTML = 'Erro ao carregar: ' + error;
-      });
-  </script>
+    <h1>Connection Test</h1>
+    <div id="status">Checking connection...</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // IMPORTANT: Replace this URL with your deployed backend's Cloud Run URL
+            const backendUrl = 'https://teste-backend-523793487257.us-central1.run.app/api/status';
+
+            fetch(backendUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const statusDiv = document.getElementById('status');
+                    statusDiv.textContent = `Success: ${data.message}`;
+                    statusDiv.className = 'success';
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    const statusDiv = document.getElementById('status');
+                    statusDiv.textContent = `Error connecting to backend at ${backendUrl}. Check the URL and backend logs.`;
+                    statusDiv.className = 'error';
+                });
+        });
+    </script>
 </body>
 </html>

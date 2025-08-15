@@ -1,4 +1,14 @@
-FROM httpd:2.4
-COPY index.html /usr/local/apache2/htdocs/
-RUN sed -i 's/Listen 80/Listen 8080/g' /usr/local/apache2/conf/httpd.conf
-EXPOSE 8080
+# Use an official Python runtime as a parent image
+FROM python:3.8-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the current directory contents into the container at /app
+COPY . /app
+
+# Install any needed packages specified in requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Run the web server with Gunicorn on port 8080
+CMD exec gunicorn --bind :8080 --workers 1 --threads 8 --timeout 0 app:app
